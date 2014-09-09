@@ -1,0 +1,32 @@
+{
+  "name": "hm/inception",
+  "version": "0.0.0",
+  "authors": [
+    "David Wambugu <davidwambugu@gmail.com>"
+  ],
+  "description": "hm visualization kit ... go deeeper",
+  "keywords": [
+    "inception"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "leaflet": "~0.7.3",
+    "rickshaw": "~1.5.0",
+    "fontawesome": "~4.2.0",
+    "nvd3": "~1.1.15-beta",
+    "nprogress": "~0.1.6",
+    "dcjs": "2.*",
+    "headroom.js": "~0.7.0"
+  }
+}

@@ -1,0 +1,61 @@
+@import url('https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css');
+
+.padding-30 {
+    padding-top: 30px;
+}
+
+#map,#results {
+    height: 400px;
+    width: 100%;
+}
+
+html, body {
+    height: 100%;
+}
+
+.fill {
+    padding: 0px;
+    min-height: 100%;
+    height: 100%;
+    width: 100%;
+    min-width: 100%;
+}
+
+.fill-height {
+    padding: 0px;
+    min-height: 100%;
+    height: 100%;
+
+}
+
+body {
+    padding-top: 40px; /*for navbar*/
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+}
+
+.charts-container {
+    float: left;
+    position: relative;
+}
+
+.charts-container > .body {
+    left: 40px;
+    position: relative;
+}
+
+.charts-container > .yaxis {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+}
+
+.legend {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0 0 10px;
+
+}
+

@@ -6,7 +6,7 @@ var accelerometer = dc.compositeChart('#chart');
 
 var speedChart = dc.lineChart('#speed');
 
-var gyroChart = dc.compositeChart('#gyro');
+//var gyroChart = dc.compositeChart('#gyro');
 
 
 function populateGraphs(parentHref) {
@@ -25,8 +25,8 @@ function populateGraphs(parentHref) {
             d.accelZ = +d.accelerometer_z;
             d.speed = +d.speed;
             d.gyroX = +d.gyroscope_x;
-            d.gyroY = +gyroscope_y;
-            d.gyroZ = +gyroscope_z;
+            d.gyroY = +d.gyroscope_y;
+            d.gyroZ = +d.gyroscope_z;
 
         });
 
@@ -48,7 +48,7 @@ function populateGraphs(parentHref) {
             return d.accelX / 2;
         });
 
-        var axelZ = timeDimesion.group.reduceSum(function (d) {
+        var axelZ = timeDimesion.group().reduceSum(function (d) {
             return d.accelZ / 2;
 
         })
@@ -75,8 +75,14 @@ function populateGraphs(parentHref) {
 
             .xAxis();
 
-     speedChart.width(200).height(100).dimension(timeDimesion).group(speedGroup)
-         .x(d3.time.scale().domain([start, end])).xAxis();
+
+
+        var speedGroup = timeDimesion.group().reduceSum(function (d) {
+            return d.speed;
+        });
+
+        speedChart.width(600).height(400).dimension(timeDimesion).group(speedGroup)
+            .x(d3.time.scale().domain([start, end])).xAxis();
 
 
         dc.renderAll();

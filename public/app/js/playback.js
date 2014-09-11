@@ -49,19 +49,19 @@ var cachedData, accelerometerChart;
 var accelerometerData = [];
 
 var x = {
-    "name":"x",
+    "name": "x",
     "type": "spline", showInLegend: true,
     "dataPoints": [], "color": 'rgb(255, 127, 14)'
 }
 var y = {
-    "name":"y",
+    "name": "y",
 
     "type": "spline",
     showInLegend: true,
     "dataPoints": [], "color": 'rgb(44, 160, 44)'
 };
 var z = {
-    "name":"z",
+    "name": "z",
 
     "type": "spline", showInLegend: true,
     "dataPoints": [], "color": 'rgb(119, 119, 255)'
@@ -73,7 +73,7 @@ marker = {
 
 
 var speedX = {
-    "name":"speed",
+    "name": "speed",
 
     "type": "spline", "dataPoints": [], showInLegend: true,
     "color": 'rgb(255, 127, 14)'
@@ -82,6 +82,29 @@ var speedMarker = {"type": "spline", "dataPoints": [], "color": '#00000'};
 
 var speedData = [speedX, speedMarker];
 var speedChart;
+
+
+//Gyroscope xone
+var gyroX = {
+    "name": "x",
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(255, 127, 14)'
+}
+var gyroY = {
+    "name": "y",
+
+    "type": "spline",
+    showInLegend: true,
+    "dataPoints": [], "color": 'rgb(44, 160, 44)'
+};
+var gyroZ = {
+    "name": "z",
+
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(119, 119, 255)'
+};
+
+var gyroMarker = {"type": "spline", "dataPoints": [], "color": '#00000'};
 
 accelerometerData = [x, y, z, marker];
 function accelerometerCharts() {
@@ -138,6 +161,41 @@ function drawSpeed() {
 }
 
 
+gyroScopeData = [gyroX, gyroY, gyroZ, gyroMarker];
+function gyroScopeCharts() {
+
+
+    for (var i = lastIndex; i < range; i++) {
+        var time = new Date(properties.timestamps[i]);
+        var xVal = +properties.gyroscope_x[i];
+
+        gyroX.dataPoints.push({x: time, y: xVal});
+
+        var yVal = +properties.gyroscope_y[i];
+
+        gyroY.dataPoints.push({x: time, y: yVal});
+        //
+        var zVal = +properties.gyroscope_z[i];
+
+        gyroZ.dataPoints.push({x: time, y: zVal});
+
+    }
+
+
+    gyroScopeChart = new CanvasJS.Chart("gyro",
+        {
+            zoomEnabled: true,
+            title: {
+                text: "GyroScope"
+            },
+            data: gyroScopeData
+        });
+
+    gyroScopeChart.render();
+
+}
+
+
 function drawNew() {
     accelerometerCharts();
     drawSpeed();
@@ -177,6 +235,12 @@ function schedule() {
 
         marker.dataPoints.push({x: time, y: 20});
         marker.dataPoints.push({x: time, y: -20});
+
+
+        gyroMarker.dataPoints.length = 0;
+
+        gyroMarker.dataPoints.push({x: time, y: 10});
+        gyroMarker.dataPoints.push({x: time, y: -10});
 
         accelerometerChart.render()
         speedChart.render();

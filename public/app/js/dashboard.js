@@ -84,9 +84,9 @@ function createList(elements) {
     var list = "";
     for (var i = 0; i < elements.hits.hits.length; i++) {
         var element = elements.hits.hits[i];
-        list += "<li> <span>"+element._id.substr(0,5)+"</span> " +
-        "<a class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\">Deeper <i class='glyphicon glyphicon-zoom-in'></i>  </a> "
-        +"<a href=\"/playback/"+element._id+"\">Deeper<i class=\'glyphicon glyphicon-play-circle \'></i></a>"+
+        list += "<li> <span>" + element._id.substr(0, 5) + "</span> " +
+        "<a  class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\" data-element-id='" + element._id + "'>Deeper <i class='glyphicon glyphicon-zoom-in'></i>  </a> "
+        + "<a href=\"/playback/" + element._id + "\">Deeper<i class=\'glyphicon glyphicon-play-circle \'></i></a>" +
         "</li>";
         console.log(element);
     }
@@ -101,8 +101,26 @@ function createList(elements) {
 
 $('#results  ul').on('click', 'li  a.more-details', function () {
     console.log(this.href);
+    var elementId = $(this).data('element-id');
+    console.log(elementId);
+    //showTracks(elementId);
     populateGraphs(this.href);
     return false;
 });
+
+var tracksLayer;
+
+function showTracks(id) {
+    $.get('/search/geo-json/csv/' + id, function (geoJsonDoc) {
+
+        //geoJson = geoJsonDoc._source;
+        //console.log(geoJsonDoc);
+        //tracksLayer = L.geoJson().addTo(map);
+        //geoJson.geometry.type="MultiPoint";
+        ////tracksLayer.addData(geoJson);
+
+
+    });
+}
 
 

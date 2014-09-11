@@ -27,6 +27,7 @@
     "nvd3": "~1.1.15-beta",
     "nprogress": "~0.1.6",
     "dcjs": "2.*",
-    "headroom.js": "~0.7.0"
+    "headroom.js": "~0.7.0",
+    "moment": "~2.8.3"
   }
 }

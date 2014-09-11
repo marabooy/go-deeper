@@ -84,8 +84,10 @@ function createList(elements) {
     var list = "";
     for (var i = 0; i < elements.hits.hits.length; i++) {
         var element = elements.hits.hits[i];
-        list += "<li> " +
-        "<a class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\">" + element._id + "</a></li>";
+        list += "<li> <span>"+element._id.substr(0,5)+"</span> " +
+        "<a class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\">Play <i class='glyphicon glyphicon-play-circle'></i>  </a> "
+        +"<a href=\"/playback/"+element._id+"\">Deeper<i class=\'glyphicon glyphicon-zoom-in\'></i></a>"+
+        "</li>";
         console.log(element);
     }
 
@@ -96,16 +98,10 @@ function createList(elements) {
 
 }
 
-$('#results  ul').on('click', 'li  a', function () {
+$('#results  ul').on('click', 'li  a.more-details', function () {
     console.log(this.href);
     populateGraphs(this.href);
     return false;
 });
 
 
-
-
-function DrawSpeedChart(speeds,timestamp){
-
-
-}

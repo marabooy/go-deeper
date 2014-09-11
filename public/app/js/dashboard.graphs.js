@@ -1,10 +1,10 @@
 /**
  * Created by David Kaguma on 9/9/2014.
  */
-var accelerometer = dc.compositeChart('#chart');
+//var accelerometer = dc.compositeChart('#chart');
 
 
-var speedChart = dc.lineChart('#speed');
+//var speedChart = dc.lineChart('#speed');
 
 //var gyroChart = dc.compositeChart('#gyro');
 
@@ -13,12 +13,12 @@ function populateGraphs(parentHref) {
 
     $.get(parentHref, function (data) {
 
-        var dtgFormat = d3.time.format("%Y-%m-%d %H:%M:%S:%L");
+        //var dtgFormat = d3.time.format("%Y-%m-%d %H:%M:%S:%L");
         //console.log(data);
 
         //preprocess data
         data.forEach(function (d) {
-            d.timestamp = dtgFormat.parse(d.timestamps.substr(0, 24));
+            //d.timestamp = dtgFormat.parse(d.timestamps.substr(0, 24));
             //console.log(d.timestamp);
             d.accelX = +d.accelerometer_x;
             d.accelY = +d.accelerometer_y;
@@ -30,64 +30,161 @@ function populateGraphs(parentHref) {
 
         });
 
-        var facts = new crossfilter(data);
-        var allFacts = facts.groupAll();
+        console.log(data.shift());
 
 
-        var timeDimesion = facts.dimension(function (d) {
+        var cachedData, accelerometerChart;
 
-            return Math.ceil(d.timestamp / 100) * 100;
-        });
+        var accelerometerData = [];
 
+        var x = {
+            "name": "x",
+            "type": "spline", showInLegend: true,
+            "dataPoints": [], "color": 'rgb(255, 127, 14)'
+        }
+        var y = {
+            "name": "y",
 
-        var axelY = timeDimesion.group().reduceSum(function (d) {
-            return d.accelY / 2;
-        })
+            "type": "spline",
+            showInLegend: true,
+            "dataPoints": [], "color": 'rgb(44, 160, 44)'
+        };
+        var z = {
+            "name": "z",
 
-        var axelX = timeDimesion.group().reduceSum(function (d) {
-            return d.accelX / 2;
-        });
-
-        var axelZ = timeDimesion.group().reduceSum(function (d) {
-            return d.accelZ / 2;
-
-        })
-
-
-        var start = Date.parse(data[0].timestamps);
-        var end = Date.parse(data[data.length - 1].timestamps);
-        console.log("start", start, end);
-
-        accelerometer.width(400).height(200).margins({top: 10, right: 10, bottom: 20, left: 40})
-            .dimension(timeDimesion)
-            .transitionDuration(500)
-            .elasticY(true).
-            brushOn(true)
-            .valueAccessor(function (d) {
-                return d.value;
-            })
-            .mouseZoomable(true)
-            .x(d3.time.scale().domain([start, end])) // scale and domain of the graph
-            .compose([
-                dc.lineChart(accelerometer).group(axelY).ordinalColors(["#F57F6D"]),
-                dc.lineChart(accelerometer).group(axelX)
-            ]).renderLabel(true)
-
-            .xAxis();
+            "type": "spline", showInLegend: true,
+            "dataPoints": [], "color": 'rgb(119, 119, 255)'
+        };
 
 
 
-        var speedGroup = timeDimesion.group().reduceSum(function (d) {
-            return d.speed;
-        });
-
-        speedChart.width(600).height(400).dimension(timeDimesion).group(speedGroup)
-            .x(d3.time.scale().domain([start, end])).xAxis();
 
 
-        dc.renderAll();
+        var speedX = {
+            "name": "speed",
+
+            "type": "spline", "dataPoints": [], showInLegend: true,
+            "color": 'rgb(255, 127, 14)'
+        };
+
+        var speedData = [speedX];
+        var speedChart;
 
 
+        //Gyroscope xone
+        var gyroX = {
+            "name": "x",
+            "type": "spline", showInLegend: true,
+            "dataPoints": [], "color": 'rgb(255, 127, 14)'
+        }
+        var gyroY = {
+            "name": "y",
+
+            "type": "spline",
+            showInLegend: true,
+            "dataPoints": [], "color": 'rgb(44, 160, 44)'
+        };
+        var gyroZ = {
+            "name": "z",
+
+            "type": "spline", showInLegend: true,
+            "dataPoints": [], "color": 'rgb(119, 119, 255)'
+        };
+
+        accelerometerData = [x, y, z];
+        function accelerometerCharts() {
+
+
+            for (var i = 0; i < data.length; i++) {
+                var time = new Date(data[i].timestamps);
+                var xVal = +data[i].accelX;
+
+                x.dataPoints.push({x: time, y: xVal});
+
+                var yVal = +data[i].accelY;
+                y.dataPoints.push({x: time, y: yVal});
+                //
+                var zVal = +data[i].accelZ;
+                z.dataPoints.push({x: time, y: zVal});
+
+            }
+
+
+            accelerometerChart = new CanvasJS.Chart("chart",
+                {
+                    zoomEnabled: true,
+                    title: {
+                        text: "Accelerometer"
+                    },
+                    data: accelerometerData
+                });
+
+            accelerometerChart.render();
+
+        }
+
+
+        function drawSpeed() {
+            for (var i = 0; i < data.length; i++) {
+                var time = new Date(data[i].timestamps);
+
+                var speed = +data[i].speed;
+                //console.log(speed);
+                speedX.dataPoints.push({x: time, y: speed});
+            }
+
+
+            speedChart = new CanvasJS.Chart("speed",
+                {
+                    zoomEnabled: true,
+                    title: {
+                        text: "Speed"
+                    },
+                    data: speedData
+                });
+
+            speedChart.render();
+
+        }
+
+
+
+
+        gyroScopeData = [gyroX, gyroY, gyroZ];
+        function gyroScopeCharts() {
+
+
+            for (var i = 0; i < data.length; i++) {
+                var time = new Date(data[i].timestamps);
+                var xVal = +data[i].gyroX;
+
+                gyroX.dataPoints.push({x: time, y: xVal});
+
+                var yVal = +data[i].gyroY;
+                gyroY.dataPoints.push({x: time, y: yVal});
+                //
+                var zVal = +data[i].gyroZ;
+                gyroZ.dataPoints.push({x: time, y: zVal});
+
+            }
+
+
+            gyroScopeChart = new CanvasJS.Chart("gyro",
+                {
+                    zoomEnabled: true,
+                    title: {
+                        text: "GyroScope"
+                    },
+                    data: gyroScopeData
+                });
+
+            gyroScopeChart.render();
+
+        }
+
+        drawSpeed();
+        accelerometerCharts();
+        gyroScopeCharts();
     });
 
 }

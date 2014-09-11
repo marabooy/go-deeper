@@ -85,13 +85,14 @@ function createList(elements) {
     for (var i = 0; i < elements.hits.hits.length; i++) {
         var element = elements.hits.hits[i];
         list += "<li> <span>"+element._id.substr(0,5)+"</span> " +
-        "<a class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\">Play <i class='glyphicon glyphicon-play-circle'></i>  </a> "
-        +"<a href=\"/playback/"+element._id+"\">Deeper<i class=\'glyphicon glyphicon-zoom-in\'></i></a>"+
+        "<a class='more-details' href=\"/search/document/" + element._type + "/" + element._id + "\">Deeper <i class='glyphicon glyphicon-zoom-in'></i>  </a> "
+        +"<a href=\"/playback/"+element._id+"\">Deeper<i class=\'glyphicon glyphicon-play-circle \'></i></a>"+
         "</li>";
         console.log(element);
     }
 
     if (elements.hits.hits.length !== 0) {
+        $('.no-data').addClass('hide');
         $('#results > ul').html(list);
     }
 

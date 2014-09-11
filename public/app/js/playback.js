@@ -17,7 +17,7 @@ var deltas = [];
 function chunk() {
 
     lastIndex = range;
-    for (var i = lastIndex; (timeDimensionLength < 3000 && i<2000); i++) {
+    for (var i = lastIndex; (timeDimensionLength < 3000 && i < 2000); i++) {
         range++;
         var delta = properties.cumulative_time[i + 1] - properties.cumulative_time[i];
         console.log(delta, "delta");
@@ -48,13 +48,40 @@ var cachedData, accelerometerChart;
 
 var accelerometerData = [];
 
-var x = {"type": "spline", "dataPoints": [], "color": 'rgb(255, 127, 14)'}
-var y = {"type": "spline", "dataPoints": [], "color": 'rgb(44, 160, 44)'};
-var z = {"type": "spline", "dataPoints": [], "color": 'rgb(119, 119, 255)'};
-marker = {"type": "spline", dataPoints: [], color: "#00000"};
+var x = {
+    "name":"x",
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(255, 127, 14)'
+}
+var y = {
+    "name":"y",
+
+    "type": "spline",
+    showInLegend: true,
+    "dataPoints": [], "color": 'rgb(44, 160, 44)'
+};
+var z = {
+    "name":"z",
+
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(119, 119, 255)'
+};
+marker = {
+    "type": "spline",
+    dataPoints: [], color: "#00000"
+};
 
 
-var speedX=
+var speedX = {
+    "name":"speed",
+
+    "type": "spline", "dataPoints": [], showInLegend: true,
+    "color": 'rgb(255, 127, 14)'
+};
+var speedMarker = {"type": "spline", "dataPoints": [], "color": '#00000'};
+
+var speedData = [speedX, speedMarker];
+var speedChart;
 
 accelerometerData = [x, y, z, marker];
 function accelerometerCharts() {
@@ -88,13 +115,32 @@ function accelerometerCharts() {
 }
 
 
-function drawSpeed(){
+function drawSpeed() {
+    for (var i = lastIndex; i < range; i++) {
+        var time = new Date(properties.timestamps[i]);
+
+        var speed = +properties.speed[i];
+        console.log(speed);
+        speedX.dataPoints.push({x: time, y: speed});
+    }
+
+
+    speedChart = new CanvasJS.Chart("speed",
+        {
+            title: {
+                text: "Speed"
+            },
+            data: speedData
+        });
+
+    speedChart.render();
 
 }
 
 
 function drawNew() {
     accelerometerCharts();
+    drawSpeed();
 }
 
 
@@ -104,28 +150,40 @@ function updateChart() {
 }
 
 function schedule() {
-    var delta=0;
+    var delta = 0;
     if (deltas.length == 0) {
-        x.dataPoints.length=0;
-        y.dataPoints.length=0;
-        z.dataPoints.length=0;
+        x.dataPoints.length = 0;
+        y.dataPoints.length = 0;
+        z.dataPoints.length = 0;
+
+        speedX.dataPoints.length = 0;
+
         chunk();
-        //console.log(deltas.length);
         drawNew();
     }
     else {
-        delta= deltas.shift();
+        delta = deltas.shift();
 
-        timeDimensionLength -=delta;
+        timeDimensionLength -= delta;
         var time = timeLine.shift();
         marker.dataPoints.shift();
+
         marker.dataPoints.shift();
+        speedMarker.dataPoints.shift();
+        speedMarker.dataPoints.shift();
+
+        speedMarker.dataPoints.push({x: time, y: 30});
+        speedMarker.dataPoints.push({x: time, y: -30});
+
         marker.dataPoints.push({x: time, y: 20});
         marker.dataPoints.push({x: time, y: -20});
+
         accelerometerChart.render()
+        speedChart.render();
     }
 
-    requestAnimationFrame(schedule,delta);
+    if (lastIndex < maxIndex)
+        requestAnimationFrame(schedule, delta);
 }
 
 requestAnimationFrame(schedule);

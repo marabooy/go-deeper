@@ -182,7 +182,7 @@ function gyroScopeCharts() {
     }
 
 
-    gyroScopeChart = new CanvasJS.Chart("gyro",
+    gyroScopeChart = new CanvasJS.Chart("gyroscope-chart",
         {
             zoomEnabled: true,
             title: {
@@ -199,13 +199,12 @@ function gyroScopeCharts() {
 function drawNew() {
     accelerometerCharts();
     drawSpeed();
+    gyroScopeCharts()
 }
 
 
-function updateChart() {
 
 
-}
 
 function schedule() {
     var delta = 0;
@@ -215,6 +214,10 @@ function schedule() {
         z.dataPoints.length = 0;
 
         speedX.dataPoints.length = 0;
+
+        gyroX.dataPoints.length=0;
+        gyroY.dataPoints.length=0
+        gyroZ.dataPoints.length=0
 
         chunk();
         drawNew();
@@ -237,13 +240,15 @@ function schedule() {
         marker.dataPoints.push({x: time, y: -20});
 
 
-        gyroMarker.dataPoints.length = 0;
+        gyroMarker.dataPoints.shift();
+        gyroMarker.dataPoints.shift();
 
         gyroMarker.dataPoints.push({x: time, y: 10});
         gyroMarker.dataPoints.push({x: time, y: -10});
 
         accelerometerChart.render()
         speedChart.render();
+        gyroScopeChart.render(0)
     }
 
     if (lastIndex < maxIndex)
@@ -253,3 +258,4 @@ function schedule() {
 requestAnimationFrame(schedule);
 
 //discover images and videos if they exist
+

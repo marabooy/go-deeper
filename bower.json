@@ -28,6 +28,7 @@
     "nprogress": "~0.1.6",
     "dcjs": "2.*",
     "headroom.js": "~0.7.0",
-    "moment": "~2.8.3"
+    "moment": "~2.8.3",
+    "flat-ui": "~2.2.0"
   }
 }

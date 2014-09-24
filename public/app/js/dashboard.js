@@ -10,10 +10,14 @@ $(document).ajaxStart(function () {
 $(document).ajaxComplete(function () {
     NProgress.done();
 })
+$(document).ajaxError(function(){
+    NProgress.done(true);
+});
 
 var markers = [];
 //setup leaflet
 var map = L.map('map').setView([-1.2833, 36.8167], 8);
+
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18
@@ -40,14 +44,14 @@ function onMapClick(e) {
             var markerToDelete = markers.shift();
             map.removeLayer(markerToDelete);
         }
-        makeThatCall(markers);
+        loadData(markers);
     }
 };
 
 map.on('click', onMapClick);
 
 
-function makeThatCall(markers) {
+function loadData(markers) {
 
     var values = [markers[0].getLatLng(), markers[1].getLatLng()];
     var query = [
@@ -60,7 +64,6 @@ function makeThatCall(markers) {
             values[1].lat
         ]
     ];
-//    console.log(query);
 
     $.ajax({
         method: 'POST',
@@ -73,6 +76,7 @@ function makeThatCall(markers) {
             console.log(response);
         }
     });
+
 
 
 //
@@ -113,11 +117,11 @@ var tracksLayer;
 function showTracks(id) {
     $.get('/search/geo-json/csv/' + id, function (geoJsonDoc) {
 
-        //geoJson = geoJsonDoc._source;
-        //console.log(geoJsonDoc);
-        //tracksLayer = L.geoJson().addTo(map);
+        geoJson = geoJsonDoc._source;
+        console.log(geoJsonDoc.geometry);
+        tracksLayer = L.geoJson().addTo(map);
         //geoJson.geometry.type="MultiPoint";
-        ////tracksLayer.addData(geoJson);
+        //tracksLayer.addData(geoJson);
 
 
     });

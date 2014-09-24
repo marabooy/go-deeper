@@ -203,21 +203,32 @@ function drawNew() {
 }
 
 
-
-
-
 function schedule() {
     var delta = 0;
     if (deltas.length == 0) {
-        x.dataPoints.length = 0;
-        y.dataPoints.length = 0;
-        z.dataPoints.length = 0;
+        while (x.dataPoints.length > 0) {
+            //
+            console.log("popping.... ");
+            x.dataPoints.pop();
+            y.dataPoints.pop();
+            z.dataPoints.pop();
 
-        speedX.dataPoints.length = 0;
+            speedX.dataPoints.pop();
 
-        gyroX.dataPoints.length=0;
-        gyroY.dataPoints.length=0
-        gyroZ.dataPoints.length=0
+            gyroX.dataPoints.pop();
+            gyroY.dataPoints.pop();
+            gyroZ.dataPoints.pop()
+        }
+
+        //x.dataPoints.length = 0;
+        //y.dataPoints.length = 0;
+        //z.dataPoints.length = 0;
+        //
+        //speedX.dataPoints.length = 0;
+        //
+        //gyroX.dataPoints.length = 0;
+        //gyroY.dataPoints.length = 0
+        //gyroZ.dataPoints.length = 0
 
         chunk();
         drawNew();
@@ -239,7 +250,6 @@ function schedule() {
         marker.dataPoints.push({x: time, y: 20});
         marker.dataPoints.push({x: time, y: -20});
 
-
         gyroMarker.dataPoints.shift();
         gyroMarker.dataPoints.shift();
 
@@ -252,7 +262,7 @@ function schedule() {
     }
 
     if (lastIndex < maxIndex)
-        requestAnimationFrame(schedule, delta);
+        requestAnimationFrame(schedule);
 }
 
 requestAnimationFrame(schedule);

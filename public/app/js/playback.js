@@ -230,8 +230,8 @@ function schedule() {
         //gyroY.dataPoints.length = 0
         //gyroZ.dataPoints.length = 0
 
-        chunk();
-        drawNew();
+        //chunk();
+        //drawNew();
     }
     else {
         delta = deltas.shift();
@@ -268,4 +268,14 @@ function schedule() {
 requestAnimationFrame(schedule);
 
 //discover images and videos if they exist
+
+function findObjects(id) {
+
+    var url = '/find-objects/photo/'+id;
+    var eventSource = new EventSource(url);
+
+    eventSource.addListener('message',function(e){
+        console.log(e);
+    });
+}
 

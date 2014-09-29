@@ -107,7 +107,7 @@ $('#results  ul').on('click', 'li  a.more-details', function () {
     console.log(this.href);
     var elementId = $(this).data('element-id');
     console.log(elementId);
-    //showTracks(elementId);
+    showTracks(elementId);
     populateGraphs(this.href);
     return false;
 });
@@ -115,16 +115,20 @@ $('#results  ul').on('click', 'li  a.more-details', function () {
 var tracksLayer;
 
 function showTracks(id) {
-    $.get('/search/geo-json/csv/' + id, function (geoJsonDoc) {
+    //if(!geoJson) {
+    //    $.get('/search/geo-json/csv/' + id, function (geoJsonDoc) {
+    //
+    //        geoJson = geoJsonDoc._source;
+    //        console.log(geoJsonDoc.geometry);
+    //        tracksLayer = L.geoJson().addTo(map);
+    //        //geoJson.geometry.type="MultiPoint";
+    //        //tracksLayer.addData(geoJson);
+    //
+    //
+    //    });
+    //}
 
-        geoJson = geoJsonDoc._source;
-        console.log(geoJsonDoc.geometry);
-        tracksLayer = L.geoJson().addTo(map);
-        //geoJson.geometry.type="MultiPoint";
-        //tracksLayer.addData(geoJson);
-
-
-    });
+    findObjects(id);
 }
 
 

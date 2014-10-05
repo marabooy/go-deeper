@@ -1,0 +1,161 @@
+/**
+ * Created by David Kaguma on 9/11/2014.
+ */
+
+
+//slice and dice the data to fit the requirement
+
+var timeDimensionLength = 0;
+
+
+var accelerometerChart;
+
+var accelerometerData = [];
+
+var x = {
+    "name": "x",
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(255, 127, 14)'
+}
+var y = {
+    "name": "y",
+
+    "type": "spline",
+    showInLegend: true,
+    "dataPoints": [], "color": 'rgb(44, 160, 44)'
+};
+var z = {
+    "name": "z",
+
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(119, 119, 255)'
+};
+marker = {
+    "type": "spline",
+    dataPoints: [], color: "#00000"
+};
+
+
+var speedX = {
+    "name": "speed",
+
+    "type": "spline", "dataPoints": [], showInLegend: true,
+    "color": 'rgb(255, 127, 14)'
+};
+var speedMarker = {"type": "spline", "dataPoints": [], "color": '#00000'};
+
+var speedData = [speedX, speedMarker];
+var speedChart;
+
+
+//Gyroscope xone
+var gyroX = {
+    "name": "x",
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(255, 127, 14)'
+}
+var gyroY = {
+    "name": "y",
+
+    "type": "spline",
+    showInLegend: true,
+    "dataPoints": [], "color": 'rgb(44, 160, 44)'
+};
+var gyroZ = {
+    "name": "z",
+
+    "type": "spline", showInLegend: true,
+    "dataPoints": [], "color": 'rgb(119, 119, 255)'
+};
+
+var gyroMarker = {"type": "spline ", "dataPoints": [], "color": '#00000'};
+
+accelerometerData = [x, y, z, marker];
+function accelerometerCharts() {
+
+
+    accelerometerChart = new CanvasJS.Chart("chart",
+        {
+            title: {
+                text: "Accelerometer"
+            },
+            data: accelerometerData
+        });
+
+    accelerometerChart.render();
+
+}
+
+
+function drawSpeed() {
+
+
+    speedChart = new CanvasJS.Chart("speed",
+        {
+            title: {
+                text: "Speed"
+            },
+            data: speedData
+        });
+
+    speedChart.render();
+
+}
+
+
+gyroScopeData = [gyroX, gyroY, gyroZ, gyroMarker];
+function gyroScopeCharts() {
+
+
+    gyroScopeChart = new CanvasJS.Chart("gyro",
+        {
+            zoomEnabled: true,
+            title: {
+                text: "GyroScope"
+            },
+            data: gyroScopeData
+        });
+
+    gyroScopeChart.render();
+
+}
+
+
+function initCharts() {
+    accelerometerCharts();
+    drawSpeed();
+    gyroScopeCharts()
+}
+
+
+function fillUp(data) {
+
+    var date = new Date(data[31]);
+    console.log(date);
+    //accelerometer stuff
+    x.dataPoints.push({y: +data[0], x: date});
+    y.dataPoints.push({y: +data[1], x: date});
+    z.dataPoints.push({y: +data[2], x: date});
+
+
+    gyroX.dataPoints.push({y: +data[9], x: date});
+    gyroY.dataPoints.push({y: +data[10], x: date});
+    gyroZ.dataPoints.push({y: +data[11], x: date});
+
+    if (x.dataPoints.length > 50) {
+        x.dataPoints.shift();
+        y.dataPoints.shift();
+        z.dataPoints.shift();
+
+        gyroX.dataPoints.shift();
+        gyroY.dataPoints.shift();
+        gyroZ.dataPoints.shift();
+    }
+
+    requestAnimationFrame(function () {
+        gyroScopeChart.render();
+        accelerometerChart.render();
+
+    });
+
+}

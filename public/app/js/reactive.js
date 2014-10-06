@@ -76,6 +76,8 @@ function accelerometerCharts() {
 
     accelerometerChart = new CanvasJS.Chart("chart",
         {
+            zoomEnabled: true,
+
             title: {
                 text: "Accelerometer"
             },
@@ -120,12 +122,22 @@ function gyroScopeCharts() {
 
 }
 
+var speedometer;
+function drawSpeedometer() {
+
+    speedometer = new JustGage({id: 'speedometer', 'value': 0,"label":"Magnitude of Y",gaugeWidthScale:0.4,refreshAnimationTime:50,max:30});
+
+}
+
 
 function initCharts() {
     accelerometerCharts();
-    drawSpeed();
+    //drawSpeed();
+    drawSpeedometer();
     gyroScopeCharts()
 }
+
+
 
 
 function fillUp(data) {
@@ -133,14 +145,18 @@ function fillUp(data) {
     var date = new Date(data[31]);
     console.log(date);
     //accelerometer stuff
-    x.dataPoints.push({y: +data[0], x: date});
-    y.dataPoints.push({y: +data[1], x: date});
-    z.dataPoints.push({y: +data[2], x: date});
+    x.dataPoints.push({y: +data[6], x: date});
+    y.dataPoints.push({y: +data[7], x: date});
+    z.dataPoints.push({y: +data[8], x: date});
 
 
     gyroX.dataPoints.push({y: +data[9], x: date});
     gyroY.dataPoints.push({y: +data[10], x: date});
     gyroZ.dataPoints.push({y: +data[11], x: date});
+
+    var xVal = Math.abs(+data[7]);
+
+    speedometer.refresh(xVal)
 
     if (x.dataPoints.length > 50) {
         x.dataPoints.shift();
@@ -152,9 +168,18 @@ function fillUp(data) {
         gyroZ.dataPoints.shift();
     }
 
+
+        //mesh.rotation.x = +data[16];
+        //mesh.rotation.y = +data[17];
+        //mesh.rotation.z = +data[18];
+
+
+
+
     requestAnimationFrame(function () {
         gyroScopeChart.render();
         accelerometerChart.render();
+        //renderer.render(scene, camera);
 
     });
 
